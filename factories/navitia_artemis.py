@@ -25,6 +25,7 @@ RUN mkdir -m 777 -p /srv/ed/data
 
 COPY {supervisord_conf} /etc/supervisor/conf.d/supervisord.conf
 COPY {kraken_service_wrapper} /usr/local/bin/kraken_service_wrapper
+RUN chmod a+x /usr/local/bin/kraken_service_wrapper
 """
 
 FINAL_IMAGE_NAME = 'navitia/debian8_artemis'
@@ -55,8 +56,8 @@ def factory(navitia_folder='',
     drp = DIM.DockerRunParameters(
         hostname='navitia',
         volumes=(data_folder + ':/srv/ed/data',
-                 artemis_data + ':/artemis/data',
-                 artemis_source + ':/artemis/source'),
+                 artemis_data + ':/srv/artemis/data',
+                 artemis_source + ':/srv/artemis/source'),
         ports=(port + ':80',)
     )
     ffd = FFD.FabricForDocker(None, user='navitia', platform='artemis', distrib='debian8')
