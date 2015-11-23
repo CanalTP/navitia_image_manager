@@ -2,7 +2,7 @@
 
 """
 This executable will build a debian8 prepared image for Navitia2,
-including: apache2, ssh, redis, postgresql, rabbitmq, supervisord
+including: apache2, ssh, redis, postgresql+postgis, rabbitmq, supervisord
 and a user named navitia.
 """
 
@@ -29,7 +29,7 @@ def factory(source='debian8'):
     df = DIM.DockerFile(
         os.path.join('factories', source, 'Dockerfile'),
         os.path.join('factories', source, 'supervisord.conf'),
-        os.path.join('ssh', 'unsecure_key.pub'),
+        'ssh/unsecure_key.pub',
         add_ons=('apache', 'user', 'french', 'postgres', 'sshserver', 'rabbitmq', 'redis', 'supervisor'),
         template_context=dict(user='navitia', password='navitia', home_ssh='/home/navitia/.ssh')
     )
