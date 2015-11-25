@@ -35,6 +35,19 @@ regarding docker images and containers (running, deletings, ...)
 You can run any of these scripts with option '--help' for help on the available options.
 
 
+## Installation
+
+get the source and install requirements:
+
+    git clone https@github.com:CanalTP/navitia_image_manager.git
+    cd navitia_image_manager; pip install -r requirements.txt
+
+You will need Navitia's deployment project too:
+
+    git clone https@github.com:CanalTP/fabric_navitia.git
+    cd fabric_navitia; pip install -r requirements.txt
+
+
 ## Deploy and run Artemis on Docker
 
 ### Create and start the Postgres/Postgis container
