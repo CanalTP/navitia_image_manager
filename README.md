@@ -83,6 +83,12 @@ From your host, place a france-latest.osm.pbf file into the /path/to/artemis/dat
 
     cities -i /artemis/data/france-latest.osm.pbf --connection-string 'user=cities password=cities host=postgis port=5432 dbname=cities'
 
+This command requires at least 16GB of RAM. Once the cities database is populated, you want to save your work: commit the Postgis container:
+
+    docker stop postgis
+    docker commit postgis navitia/postgis
+    docker run -d -p 5432:5432 --name postgis  navitia/postgis
+
 ### Launch Artemis tests
 
 Cd to /artemis/source, then run:
