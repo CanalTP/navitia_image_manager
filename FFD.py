@@ -46,6 +46,7 @@ class FabricForDocker(object):
                passed to settings
         """
         let = kwargs.pop('let', {})
+        shell_env = kwargs.pop('shell_env', None)
         self.log.info("Container '{}' exec fabric command {}({}, {})".format(
             self.container.container_name, cmd, args, kwargs))
         if '.' in cmd:
@@ -56,7 +57,10 @@ class FabricForDocker(object):
             command = getattr(fabfile, cmd, None)
         if not isinstance(command, tasks.WrappedCallableTask):
             raise RuntimeError("Unknown Fabric command %s" % cmd)
-        with context_managers.settings(context_managers.hide('stdout'), **let):
+        cm = [context_managers.hide('stdout')]
+        if shell_env:
+            cm.append(context_managers.shell_env(**shell_env))
+        with context_managers.settings(*cm, **let):
             api.execute(command, *args, **kwargs)
         return self
 

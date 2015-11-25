@@ -5,12 +5,6 @@ nodaemon=true
 command=/usr/sbin/sshd -D
 autorestart=true
 
-[program:postgresql]
-command=/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf
-priority=100
-user=postgres
-autorestart=true
-
 [program:redis]
 command=/usr/bin/redis-server /etc/redis/redis.conf
 priority=100

@@ -34,4 +34,59 @@ regarding docker images and containers (running, deletings, ...)
 
 You can run any of these scripts with option '--help' for help on the available options.
 
+
+## Deploy and run Artemis on Docker
+
+### Create and start the Postgres/Postgis container
+
+Cd to the root of navitia_image_manager project, then run:
+
+    PYTHONPATH=/path/to/fabric_navitia python factories/navitia_postgis.py
+
+This will build and start a posgres/postgis image based on a Debian8. A "cities" database will also be added, ready to be populated. The image is named navitia/postgis, the container is named postgis.
+
+Then restart postgresql:
+
+    docker exec -it postgis /usr/sbin/service postgresql restart
+
+Your docker container for postgres/posgis is ready but it is still empty (except an empty "cities" database).
+The next steps, while creating a Navitia image, will also create other Navitia databases and populate the cities db.
+
+### Create and start the Artemis image
+
+Cd to the root of navitia_image_manager project, then run:
+
+    PYTHONPATH=/home/francois/CanalTP/fabric_navitia python factories/navitia_artemis.py -n /path/to/navitia/packages -v yes -r -t -c
+
+This will build and commit a new Navitia image explicitely targetted for Artemis.
+> Warning: the postgis docker container must be started prior to launching this command.
+
+Run tihs image:
+
+    docker run -d -p 80:80 -v /path/to/artemis/data:/artemis/data -v /path/to/artemis/source:/artemis/source --link postgis --name artemis navitia/debian8_artemis
+
+Then connect to it:
+
+    docker exec -it artemis /bin/bash
+
+### Prepare the cities database
+
+Once connected to the Artemis container, cd to cities' alembic folder:
+
+    cd /usr/share/navitia/cities/alembic
+
+then replace the file alembic.ini with the one found in project navitia_image_manager, at path factories/artemis/alembic.ini (TODO: automate this), then run the alembic process to create the database schema:
+
+    alembic -c alembic.ini upgrade head
+
+From your host, place a france-latest.osm.pbf file into the /path/to/artemis/data folder (shared folder), then launch the cities command:
+
+    cities -i /artemis/data/france-latest.osm.pbf --connection-string 'user=cities password=cities host=postgis port=5432 dbname=cities'
+
+### Launch Artemis tests
+
+Cd to /artemis/source, then run:
+
+    CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests
+
 > Written with [StackEdit](https://stackedit.io/).

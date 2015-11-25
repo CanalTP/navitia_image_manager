@@ -1,17 +1,22 @@
 # encoding: utf-8
 
 from __future__ import unicode_literals, print_function
+import subprocess
 
 from fabric.api import env
 from fabfile.instance import add_instance
 from common import env_common
 
+POSTGIS_HOST = 'postgis'
+
 
 def artemis(host):
-    env_common(host, host, host, host)
+    db = 'root@' + eval(subprocess.check_output(["docker", "inspect", "--format",
+                                                 "'{{ .NetworkSettings.IPAddress }}'", POSTGIS_HOST]))
+    env_common(host, db, host, host)
     env.name = 'artemis'
-    env.postgresql_database_host = 'localhost'
-    # env.cities_database_uri = 'user=navitia password=password host=localhost port=5432 dbname=cities'
+    env.postgresql_database_host = POSTGIS_HOST
+    env.cities_database_uri = 'user=cities password=cities host={} port=5432 dbname=cities'.format(POSTGIS_HOST)
 
     add_instance("corr-02", "corr-02")
     add_instance("airport-01", "airport-01")

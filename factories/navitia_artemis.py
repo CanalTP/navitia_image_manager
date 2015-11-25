@@ -29,6 +29,7 @@ RUN chmod a+x /usr/local/bin/kraken_service_wrapper
 
 FINAL_IMAGE_NAME = 'navitia/debian8_artemis'
 CONTAINER_NAME = 'artemis'
+POSTGIS_LINK = 'postgis'
 
 
 @clingon.clize(artemis_source=('as',), artemis_data=('ad',), set_version=('v',))
@@ -52,10 +53,11 @@ def factory(navitia_packages='',
             print("image {} already exists".format(image_name))
             return 1
     drp = DIM.DockerRunParameters(
-        hostname='artemis',
+        hostname=CONTAINER_NAME,
         volumes=(artemis_data + ':/artemis/data',
                  artemis_source + ':/artemis/source'),
-        ports=(port + ':80', '9002:9001')
+        ports=(port + ':80', '9002:9001'),
+        links=(POSTGIS_LINK,)
     )
     ffd = FFD.FabricForDocker(None, user='navitia', platform='artemis', distrib='debian8')
     df = DIM.DockerFile(
