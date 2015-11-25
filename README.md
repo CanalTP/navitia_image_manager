@@ -35,6 +35,19 @@ regarding docker images and containers (running, deletings, ...)
 You can run any of these scripts with option '--help' for help on the available options.
 
 
+## Installation
+
+get the source and install requirements:
+
+    git clone https@github.com:CanalTP/navitia_image_manager.git
+    cd navitia_image_manager; pip install -r requirements.txt
+
+You will need Navitia's deployment project too:
+
+    git clone https@github.com:CanalTP/fabric_navitia.git
+    cd fabric_navitia; pip install -r requirements.txt
+
+
 ## Deploy and run Artemis on Docker
 
 ### Create and start the Postgres/Postgis container
@@ -82,6 +95,12 @@ then replace the file alembic.ini with the one found in project navitia_image_ma
 From your host, place a france-latest.osm.pbf file into the /path/to/artemis/data folder (shared folder), then launch the cities command:
 
     cities -i /artemis/data/france-latest.osm.pbf --connection-string 'user=cities password=cities host=postgis port=5432 dbname=cities'
+
+This command requires at least 16GB of RAM. Once the cities database is populated, you want to save your work: commit the Postgis container:
+
+    docker stop postgis
+    docker commit postgis navitia/postgis
+    docker run -d -p 5432:5432 --name postgis  navitia/postgis
 
 ### Launch Artemis tests
 
