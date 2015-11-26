@@ -1,0 +1,14 @@
+postgis:
+  image: navitia/postgis
+  ports:
+   - "5432:5432"
+
+artemis:
+  image: navitia/debian8_artemis
+  links:
+  - postgis
+  ports:
+   - "80:80"
+  volumes:
+    - "/path/to/artemis_data:/artemis/data"
+    - "/path/to/artemis:/artemis/source"
