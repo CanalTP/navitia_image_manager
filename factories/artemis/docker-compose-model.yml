@@ -1,7 +1,5 @@
 postgis:
   image: navitia/postgis
-  ports:
-   - "5432:5432"
 
 artemis:
   image: navitia/debian8_artemis

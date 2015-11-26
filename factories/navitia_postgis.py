@@ -22,14 +22,10 @@ CONTAINER_NAME = 'postgis'
 
 @clingon.clize
 def factory(commit=False):
-    drp = DIM.DockerRunParameters(
-        ports=('5432:5432',)
-    )
     df = DIM.DockerFile(
         'factories/postgis/Dockerfile',
         'factories/postgis/supervisord.conf',
         'ssh/unsecure_key.pub',
-        parameters=drp,
         add_ons=('sshserver', 'supervisor', ),
         template_context=dict(home_ssh='/root/.ssh')
     )
