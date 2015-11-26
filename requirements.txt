@@ -2,3 +2,8 @@ Jinja2
 docker-py
 clingon
 semver
+fabric
+retrying
+fabtools
+envelopes
+simplejson
