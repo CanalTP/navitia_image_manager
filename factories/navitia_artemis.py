@@ -29,7 +29,7 @@ RUN chmod a+x /usr/local/bin/kraken_service_wrapper
 
 FINAL_IMAGE_NAME = 'navitia/debian8_artemis'
 CONTAINER_NAME = 'artemis'
-POSTGIS_LINK = 'postgis'
+POSTGIS_LINK = 'artemis_db'
 
 
 @clingon.clize(artemis_source=('as',), artemis_data=('ad',), set_version=('v',))

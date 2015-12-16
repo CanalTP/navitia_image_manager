@@ -2,8 +2,10 @@
 
 # Docker Image Manager
 
-A set of convenience classes and utilies for abstracting and automating the creation, run and management of Docker images and containers.
-This is oriented for the creation of monolithic docker images (opposite to the usual microservices view).
+A set of convenience classes and utilies for abstracting
+and automating the creation, run and management of Docker images and containers.
+This is oriented for the creation of monolithic docker images (opposite to the usual
+microservices view)
 
 
 ## DIM: Docker Image Manager classes
@@ -97,7 +99,7 @@ This will build and start a posgres/postgis image based on a Debian8. A "cities"
 
 Then restart postgresql:
 
-    docker exec -it postgis /usr/sbin/service postgresql restart
+    docker exec -it artemis_db /usr/sbin/service postgresql restart
 
 Your docker container for postgres/posgis is ready but it is still empty (except an empty "cities" database).
 The next steps, while creating a Navitia image, will also create other Navitia databases and populate the cities db.
@@ -116,7 +118,7 @@ This will build and commit a new Navitia image explicitely targetted for Artemis
 
 Run tihs image:
 
-    docker run -d -p 80:80 -v /path/to/artemis_data:/artemis/data -v /path/to/artemis:/artemis/source --link postgis --name artemis navitia/debian8_artemis
+    docker run -d -p 80:80 -v /path/to/artemis_data:/artemis/data -v /path/to/artemis:/artemis/source --link artemis_db --name artemis navitia/debian8_artemis
 
 Then connect to it:
 
@@ -134,15 +136,15 @@ then replace the file alembic.ini with the one found in project navitia_image_ma
 
 From your host, place a france-latest.osm.pbf file into the /path/to/artemis_data folder (shared folder), then launch the cities command in the container:
 
-    cities -i /artemis/data/france-latest.osm.pbf --connection-string 'user=cities password=cities host=postgis port=5432 dbname=cities'
+    cities -i /artemis/data/france-latest.osm.pbf --connection-string 'user=cities password=cities host=artemis_db port=5432 dbname=cities'
 
 Running this command requires at least 16GB of RAM. Once the cities database is populated, you want to save your work: commit the Postgis container:
 
-    docker stop postgis && docker commit postgis navitia/postgis
+    docker stop artemis_db && docker commit artemis_db navitia/artemis_db
 
 Then run it again:
 
-    docker rm postgis && docker run -d -p 5432:5432 --name postgis  navitia/postgis
+    docker rm artemis_db && docker run -d -p 5432:5432 --name artemis_db  navitia/artemis_db
 
 Alternatively, a docker-compose.yml model is provided to start Artemis with Postgis as a dependancy (link).
 

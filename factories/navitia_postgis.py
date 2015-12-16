@@ -17,7 +17,7 @@ from navitia_image_manager import DIM
 
 
 IMAGE_NAME = 'navitia/postgis'
-CONTAINER_NAME = 'postgis'
+CONTAINER_NAME = 'artemis_db'
 
 
 @clingon.clize
@@ -30,7 +30,7 @@ def factory(commit=False):
         template_context=dict(home_ssh='/root/.ssh')
     )
     dim = DIM.DockerImageManager(df, image_name=IMAGE_NAME)
-    dim.build()
+    dim.build(fail_if_exists=False)
     dcm = dim.create_container(CONTAINER_NAME, start=True, if_exist='remove')
     time.sleep(3)
     dcm.exec_container('sudo -u postgres psql -c "CREATE USER cities PASSWORD \'cities\'"')

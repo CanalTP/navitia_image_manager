@@ -7,7 +7,7 @@ from fabric.api import env
 from fabfile.instance import add_instance
 from common import env_common
 
-POSTGIS_HOST = 'postgis'
+POSTGIS_HOST = 'artemis_db'
 
 
 def artemis(host):
