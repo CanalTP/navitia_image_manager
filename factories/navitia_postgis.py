@@ -29,7 +29,7 @@ def factory(commit=False):
         add_ons=('sshserver', 'supervisor', ),
         template_context=dict(home_ssh='/root/.ssh')
     )
-    dim = DIM.DockerImageManager(df, image_name=IMAGE_NAME, parameters=drp)
+    dim = DIM.DockerImageManager(df, image_name=IMAGE_NAME)
     dim.build()
     dcm = dim.create_container(CONTAINER_NAME, start=True, if_exist='remove')
     time.sleep(3)
