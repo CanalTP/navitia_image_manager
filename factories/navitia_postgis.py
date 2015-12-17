@@ -16,7 +16,7 @@ clingon.DEBUG = True
 from navitia_image_manager import DIM
 
 
-IMAGE_NAME = 'navitia/postgis'
+IMAGE_NAME = 'navitia/artemis_db'
 CONTAINER_NAME = 'artemis_db'
 
 
