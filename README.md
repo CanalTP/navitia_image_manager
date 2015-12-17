@@ -56,7 +56,7 @@ Get the source and install requirements:
     git clone https@github.com:CanalTP/navitia_image_manager.git
     cd navitia_image_manager; pip install -r requirements.txt
 
-You will need Navitia's deployment project too:
+You will need Navitia's deployment project too (in the same virtualenv):
 
     git clone https@github.com:CanalTP/fabric_navitia.git
     cd fabric_navitia; pip install -r requirements.txt
@@ -67,6 +67,7 @@ You will need Navitia's deployment project too:
 
 ## Build a custom Debian8 image
 
+You will need a recent version of docker (1.6 is too old, 1.9 works).
 Cd to the root of navitia_image_manager project, then run:
 
     python factories/navitia_debian8.py
@@ -86,7 +87,7 @@ Features:
 
  - Artemis code and data is shared between host and docker image,
    allowing short edition - test cycles using host IDE and tools.
- - The database is hold in a separate docker image, allowing saving any
+ - The database is held in a separate docker image, allowing to save any
    db state for convenience or test purpose.
 
 ### Create and start the Postgres/Postgis container
@@ -116,9 +117,9 @@ This will build and commit a new Navitia image explicitely targetted for Artemis
 
 > Warning 2: use Navitia packages built for the appropriate distribution (currently Debian8).
 
-Run tihs image:
+Run this image:
 
-    docker run -d -p 80:80 -v /path/to/artemis_data:/artemis/data -v /path/to/artemis:/artemis/source --link artemis_db --name artemis navitia/debian8_artemis
+    docker run -d -p 8080:80 -v /path/to/artemis_data:/artemis/data -v /path/to/artemis:/artemis/source --link artemis_db --name artemis navitia/debian8_artemis
 
 Then connect to it:
 
@@ -138,20 +139,19 @@ From your host, place a france-latest.osm.pbf file into the /path/to/artemis_dat
 
     cities -i /artemis/data/france-latest.osm.pbf --connection-string 'user=cities password=cities host=artemis_db port=5432 dbname=cities'
 
-Running this command requires at least 16GB of RAM. Once the cities database is populated, you want to save your work: commit the Postgis container:
+Running this command requires at least 16GB of RAM. Once the cities database is populated, you want to save your work. Disconnect from artemis image and commit the Postgis container:
 
     docker stop artemis_db && docker commit artemis_db navitia/artemis_db
 
 Then run it again:
 
-    docker rm artemis_db && docker run -d -p 5432:5432 --name artemis_db  navitia/artemis_db
+    docker rm -v artemis_db && docker run -d --name artemis_db  navitia/artemis_db
 
 Alternatively, a docker-compose.yml model is provided to start Artemis with Postgis as a dependancy (link).
 
 ### Launch Artemis tests
 
-Cd to /artemis/source, then run:
+Connect to artemis container and cd to /artemis/source, then run (you might need to grant write access to the /artemis/data/ sub-directories to www-data) :
 
     CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests
 
-> Written with [StackEdit](https://stackedit.io/).
