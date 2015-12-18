@@ -377,7 +377,7 @@ class DockerContainerManager(object):
             self.log.warning("Trying to tag image_name == tagged_name, nothing to do")
             return self
         self.log.debug("Tagging image {} as last version".format(tagged_name))
-        docker_client.tag(tagged_name, image_name)
+        docker_client.tag(tagged_name, image_name, force=True)
         return self
 
     def remove_container(self):
