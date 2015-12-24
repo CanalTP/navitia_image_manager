@@ -151,7 +151,7 @@ Alternatively, a docker-compose.yml model is provided to start Artemis with Post
 
 ### Launch Artemis tests
 
-Connect to artemis container and cd to /artemis/source, then run (you might need to grant write access to the /artemis/data/ sub-directories to www-data) :
+Connect to artemis container(navitia/debian8_artemis) and cd to /artemis/source, then run (you might need to grant write access to the /artemis/data/ sub-directories to www-data) :
 
     CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests
 
