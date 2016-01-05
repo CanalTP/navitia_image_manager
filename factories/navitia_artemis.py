@@ -22,6 +22,8 @@ RUN pip install pytest
 
 RUN mkdir -m 777 -p /srv/ed/data
 
+RUN echo "[{{rabbit,[{{loopback_users, []}}]}}]." > /etc/rabbitmq/rabbitmq.config
+
 COPY {supervisord_conf} /etc/supervisor/conf.d/supervisord.conf
 COPY {kraken_service_wrapper} /usr/local/bin/kraken_service_wrapper
 RUN chmod a+x /usr/local/bin/kraken_service_wrapper

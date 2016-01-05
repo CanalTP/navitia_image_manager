@@ -54,3 +54,5 @@ def artemis(host):
     add_instance("freqsimple", "freqsimple")
     add_instance("freqgtfs-01", "freqgtfs-01")
     add_instance("tad", "tad")
+    add_instance("sncf", "sncf")
+

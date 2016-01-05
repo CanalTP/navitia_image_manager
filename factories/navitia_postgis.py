@@ -36,6 +36,8 @@ def factory(commit=False):
     dcm.exec_container('sudo -u postgres psql -c "CREATE USER cities PASSWORD \'cities\'"')
     dcm.exec_container('sudo -u postgres createdb cities --owner=cities --encoding=UTF8 --template=template0')
     dcm.exec_container('sudo -u postgres psql -c "CREATE EXTENSION postgis" --dbname=cities')
+    dcm.exec_container('sudo -u postgres psql -c "CREATE USER kirin PASSWORD \'kirin\'"')    
+    dcm.exec_container('sudo -u postgres createdb kirin --owner=kirin --encoding=UTF8 --template=template0')
     if commit:
         dcm.stop()
         dcm.commit(IMAGE_NAME)

@@ -1,0 +1,16 @@
+artemis:
+  container_name: artemis
+  image: navitia/debian8_artemis:latest
+  hostname: "artemis"
+  volumes:
+   - /path/to/artemis/source:/artemis/source
+   - /path/to/artemis/data:/artemis/data
+
+artemis_db:
+  container_name: artemis_db
+  image: navitia/artemis_db:latest
+  stdin_open: true
+  hostname: "artemis_db"
+
+
+
