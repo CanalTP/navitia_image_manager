@@ -155,3 +155,22 @@ Connect to artemis container and cd to /artemis/source, then run (you might need
 
     CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests
 
+### Launch Kirin tests
+
+Cd to navitia_image_manager/docker_compose/artemis, modify the artemis_source and artemis_data paths in docker-compose.yml then:
+
+    docker rm -v artemis_db &&  docker rm -v artemis && docker-compose --x-networking up
+
+clone docker_kirin project then go to docker_kirin/artemis:
+
+    docker build -t kirin_config:artemis . && docker-compose --x-networking up
+
+Now you can reconnect to artemis and run:
+
+    CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests
+    
+   
+   
+    
+
+
