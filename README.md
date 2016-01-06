@@ -61,7 +61,10 @@ You will need Navitia's deployment project too (in the same virtualenv):
     git clone https@github.com:CanalTP/fabric_navitia.git
     cd fabric_navitia; pip install -r requirements.txt
 
+Go to navitia_image_manager/external_images/rabbitmq and build a docker image for rabbitmq:
 
+   docker build -t rabbitmq:latest .
+  
 ----------
 
 
@@ -157,20 +160,29 @@ Connect to artemis container and cd to /artemis/source, then run (you might need
 
 ### Launch Kirin tests
 
-Cd to navitia_image_manager/docker_compose/artemis, modify the artemis_source and artemis_data paths in docker-compose.yml then:
+Clone kirin project, got the root of the project and build a docker image for kirin by running:
 
-    docker rm -v artemis_db &&  docker rm -v artemis && docker-compose --x-networking up
+    docker build -t kirin:latest .
 
-clone docker_kirin project then go to docker_kirin/artemis:
+Clone docker_kirin project and build a docker image for kirin_config:
 
-    docker build -t kirin_config:artemis . && docker-compose --x-networking up
+    docker build -t kirin_config:artemis . 
 
+At this point, check with `docker images` that you should have following images:
+    
+    rabbitmq:latest
+    navitia/artemis
+    navitia/artemis_db
+    kirin_conifg
+    kirin:latest
+
+Cd to navitia_image_manager/docker_compose/artemis, open docker-compose-artemis-volumes.yml and give the proper paths for
+artemis/source and artemis/data with absolute path.
+
+Run:
+  docker-compose -f docker-compose-artemis.yml -f docker-compose-artemis-volumes.yml -f docker-compose-kirin.yml --x-networking up [-d]
+    
 Now you can reconnect to artemis and run:
 
     CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests
-    
-   
-   
-    
-
 

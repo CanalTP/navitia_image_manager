@@ -1,0 +1,28 @@
+# Kirin is NOT always neccessary for launching artemis but 
+# Artemis is neccessary for launching kirin
+kirin_config:
+  container_name: kirin_config
+  image: kirin_config:latest
+  stdin_open: true
+  volumes_from: 
+    - rabbitmq
+   
+kirin:
+  container_name: kirin
+  ports:
+   - "9090:9090"
+  image: kirin:latest
+  hostname: "kirin"
+  restart: always
+  volumes_from: 
+    - kirin_config
+  command: bash -c "sleep 5 && python ./manage.py db upgrade; gunicorn -b 0.0.0.0:9090 --access-logfile - kirin:app "
+
+kirin_background:
+  container_name: kirin_background
+  image: kirin:latest
+  restart: always
+  hostname: "kirin_background"
+  volumes_from: 
+    - kirin_config
+  command: bash -c "sleep 5 &&  python ./manage.py load_realtime"
