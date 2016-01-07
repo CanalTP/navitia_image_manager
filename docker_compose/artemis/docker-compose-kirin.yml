@@ -17,7 +17,8 @@ kirin:
   volumes_from: 
     - kirin_config
     - artemis_db
-  command: bash -c "sleep 15 && python ./manage.py db upgrade; gunicorn -b 0.0.0.0:9090 --access-logfile - kirin:app"
+  # Note: we need artemis_db to be ready to migrate the database schema, so we wait
+  command: bash -c "while ! pg_isready --host=artemis_db; do sleep 1; done && python ./manage.py db upgrade; gunicorn -b 0.0.0.0:9090 --access-logfile - kirin:app "
 
 kirin_background:
   container_name: kirin_background
