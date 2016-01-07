@@ -16,10 +16,7 @@ RUN echo "listen_addresses='*'" >> /etc/postgresql/9.4/main/postgresql.conf
 
 # we create the default db:
 # TODO, cities db should be installed by fabric !
-RUN service postgresql start && \
-    /bin/su postgres -c "psql -c \"CREATE USER cities PASSWORD 'cities'\"" && \
-    /bin/su postgres -c "createdb cities --owner=cities --encoding=UTF8 --template=template0" && \
-    /bin/su postgres -c "psql -c \"CREATE EXTENSION postgis\" --dbname=cities" && \
+RUN service postgresql start &&
     /bin/su postgres -c "psql -c \"CREATE USER kirin PASSWORD 'kirin'\"" && \
     /bin/su postgres -c "createdb kirin --owner=kirin --encoding=UTF8 --template=template0" && \
     service postgresql stop
