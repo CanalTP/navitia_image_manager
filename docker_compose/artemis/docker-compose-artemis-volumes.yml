@@ -1,6 +1,6 @@
 # Please give path to artemis source and artemis data
 artemis:
   volumes:
-   - /path/to/artemis/source:/artemis/source
-   - /path/to/artemis/data:/artemis/data
+   - /home/antoine/dev/artemis:/artemis/source
+   - /home/antoine/dev/data_artemis:/artemis/data
 

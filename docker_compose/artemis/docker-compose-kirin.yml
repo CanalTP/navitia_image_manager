@@ -2,7 +2,7 @@
 # Artemis is neccessary for launching kirin
 kirin_config:
   container_name: kirin_config
-  image: kirin_config:latest
+  image: kirin_config:artemis
   stdin_open: true
   volumes_from: 
     - rabbitmq
@@ -16,7 +16,8 @@ kirin:
   restart: always
   volumes_from: 
     - kirin_config
-  command: bash -c "sleep 5 && python ./manage.py db upgrade; gunicorn -b 0.0.0.0:9090 --access-logfile - kirin:app "
+    - artemis_db
+  command: bash -c "sleep 15 && python ./manage.py db upgrade; gunicorn -b 0.0.0.0:9090 --access-logfile - kirin:app"
 
 kirin_background:
   container_name: kirin_background

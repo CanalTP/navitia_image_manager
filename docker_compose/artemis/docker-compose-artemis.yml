@@ -18,5 +18,4 @@ artemis_db:
   image: navitia/artemis_db:latest
   stdin_open: true
   hostname: "artemis_db"
-  command: bash -c "service postgresql restart; while true; do sleep 2;done;"
 

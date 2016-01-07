@@ -10,13 +10,16 @@ from common import env_common
 POSTGIS_HOST = 'artemis_db'
 
 
-def artemis(host):
-    db = 'root@' + eval(subprocess.check_output(["docker", "inspect", "--format",
-                                                 "'{{ .NetworkSettings.IPAddress }}'", POSTGIS_HOST]))
+def artemis(host, db_host):
+    # db = 'root@' + eval(subprocess.check_output(["docker", "inspect", "--format",
+    #                                              "'{{ .NetworkSettings.IPAddress }}'", POSTGIS_HOST]))
+
+    db = db_host
+
     env_common(host, db, host, host)
     env.name = 'artemis'
     env.postgresql_database_host = POSTGIS_HOST
-    env.cities_database_uri = 'user=cities password=cities host={} port=5432 dbname=cities'.format(POSTGIS_HOST)
+
     env.rabbitmq_host = 'rabbitmq'
     
     add_instance("corr-02", "corr-02")
