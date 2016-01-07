@@ -17,7 +17,8 @@ def artemis(host):
     env.name = 'artemis'
     env.postgresql_database_host = POSTGIS_HOST
     env.cities_database_uri = 'user=cities password=cities host={} port=5432 dbname=cities'.format(POSTGIS_HOST)
-
+    env.rabbitmq_host = 'rabbitmq'
+    
     add_instance("corr-02", "corr-02")
     add_instance("airport-01", "airport-01")
     add_instance("prolong-mano", "prolong-mano")
@@ -54,3 +55,5 @@ def artemis(host):
     add_instance("freqsimple", "freqsimple")
     add_instance("freqgtfs-01", "freqgtfs-01")
     add_instance("tad", "tad")
+    add_instance("sncf", "sncf")
+

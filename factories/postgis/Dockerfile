@@ -11,3 +11,6 @@ RUN apt-get install -y  postgresql-server-dev-all postgis
 # change configuration to accept untrusted connections from remote hosts
 RUN echo 'host  all  all  0.0.0.0/0  password' >> /etc/postgresql/9.4/main/pg_hba.conf
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.4/main/postgresql.conf
+
+COPY supervisord_conf /etc/supervisor/conf.d/supervisord.conf
+CMD ["/usr/bin/supervisord"]
