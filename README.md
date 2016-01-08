@@ -176,16 +176,16 @@ You need fabric ((https://github.com/CanalTP/fabric_navitia)) to install navitia
 
 Go to the directory with the navitia packages and install navitia with fabric 
 
-* In the python path you need to give the path to the platform dir
+* In the python path you need to give the path to the `navitia_image_manager/platforms` dir
 * with the -f argument give the path to the fabfile directory of fabric
 
-`PYTHONPATH=../platforms fab -f /home/antoine/dev/fabric_navitia/fabfile  use:artemis deploy_from_scratch`
+`PYTHONPATH=../platforms fab -f ../../fabric_navitia/fabfile  use:artemis deploy_from_scratch`
 
 #### Upgrade version
 
 Same as in the first install, but you can call the `upgrade_version` target instead of `deploy_from_scratch`:
 
-`PYTHONPATH=../platforms fab -f /home/antoine/dev/fabric_navitia/fabfile  use:artemis upgrade_version`
+`PYTHONPATH=../platforms fab -f ../../fabric_navitia/fabfile  use:artemis upgrade_version`
 
 #### Commit the container
 To avoid doing again the whole fabric install, you can commit your navitia container (the containers must 
