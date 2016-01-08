@@ -84,7 +84,9 @@ Other images (like Artemis) are built upon this image. A 2 stages build process 
 
 ## Deploy and run Artemis on Docker
 
-The project provides all the necessary stuff to build and run a complete Artemis platform on any local computer with a minimum set of requirements (at least Debian8 or Ubuntu14, 16 GB RAM).
+
+
+The project provides all the necessary stuff to build and run a complete Artemis platform on any local computer with a minimum set of requirements (at least Debian8 or Ubuntu14).
 
 Features:
 
@@ -93,80 +95,34 @@ Features:
  - The database is held in a separate docker image, allowing to save any
    db state for convenience or test purpose.
 
-### Create and start the Postgres/Postgis container
+### Build all the necessary images
 
-Cd to the root of navitia_image_manager project, then run:
+Artemis is run in docker using docker compose. Several images are needed for this
 
-    python factories/navitia_postgis.py
+#### Artemis
 
-This will build and start a posgres/postgis image based on a Debian8. A "cities" database will also be added, ready to be populated. The image is named navitia/postgis, the container is named postgis.
+`cd factories/artemis`
 
-Then restart postgresql:
+`docker build -t navitia/debian8_artemis .`
 
-    docker exec -it artemis_db /usr/sbin/service postgresql restart
+#### Artemis Database
 
-Your docker container for postgres/posgis is ready but it is still empty (except an empty "cities" database).
-The next steps, while creating a Navitia image, will also create other Navitia databases and populate the cities db.
+`cd factories/postgis`
 
-### Create and start the Artemis image
+`docker build -t navitia/artemis_db .`
 
-Cd to the root of navitia_image_manager project, then run:
+#### Kirin
 
-    PYTHONPATH=/home/francois/CanalTP/fabric_navitia python factories/navitia_artemis.py -n /path/to/navitia/packages -v yes -r -t -c
-
-This will build and commit a new Navitia image explicitely targetted for Artemis.
-
-> Warning 1: the postgis docker container must be started prior to launching this command.
-
-> Warning 2: use Navitia packages built for the appropriate distribution (currently Debian8).
-
-Run this image:
-
-    docker run -d -p 8080:80 -v /path/to/artemis_data:/artemis/data -v /path/to/artemis:/artemis/source --link artemis_db --name artemis navitia/debian8_artemis
-
-Then connect to it:
-
-    docker exec -it artemis /bin/bash
-
-### Prepare the cities database
-
-Once connected to the Artemis container, cd to cities' alembic folder:
-
-    cd /usr/share/navitia/cities/alembic
-
-then replace the file alembic.ini with the one found in project navitia_image_manager, at path factories/artemis/alembic.ini (TODO: automate this), then run the alembic process to create the database schema:
-
-    alembic -c alembic.ini upgrade head
-
-From your host, place a france-latest.osm.pbf file into the /path/to/artemis_data folder (shared folder), then launch the cities command in the container:
-
-    cities -i /artemis/data/france-latest.osm.pbf --connection-string 'user=cities password=cities host=artemis_db port=5432 dbname=cities'
-
-Running this command requires at least 16GB of RAM. Once the cities database is populated, you want to save your work. Disconnect from artemis image and commit the Postgis container:
-
-    docker stop artemis_db && docker commit artemis_db navitia/artemis_db
-
-Then run it again:
-
-    docker rm -v artemis_db && docker run -d --name artemis_db  navitia/artemis_db
-
-Alternatively, a docker-compose.yml model is provided to start Artemis with Postgis as a dependancy (link).
-
-### Launch Artemis tests
-
-Connect to artemis container(navitia/debian8_artemis) and cd to /artemis/source, then run (you might need to grant write access to the /artemis/data/ sub-directories to www-data) :
-
-    CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests
-
-### Launch Kirin tests
-
-Clone kirin project, got the root of the project and build a docker image for kirin by running:
+Clone kirin project (https://github.com/CanalTP/kirin), got the root of the project and build a docker 
+image for kirin by running:
 
     docker build -t kirin:latest .
 
-Clone docker_kirin project and build a docker image for kirin_config:
+Clone docker_kirin project (https://github.com/CanalTP/docker_kirin) and build a docker image for kirin_config:
 
     docker build -t kirin_config:artemis . 
+
+### Run all the containers
 
 At this point, check with `docker images` that you should have following images:
     
@@ -176,13 +132,77 @@ At this point, check with `docker images` that you should have following images:
     kirin_conifg
     kirin:latest
 
-Cd to navitia_image_manager/docker_compose/artemis, open docker-compose-artemis-volumes.yml and give the proper paths for
-artemis/source and artemis/data with absolute path.
+
+Cd to navitia_image_manager/docker_compose/artemis and create a docker-compose-configuration.yml with the 
+proper paths for artemis/source and artemis/data with absolute path:
+
+```
+echo '# own custom pathes
+artemis:
+  volumes:
+   - /home/antoine/dev/artemis:/artemis/source
+   - /home/antoine/dev/data_artemis:/artemis/data
+'> docker_compose/artemis/docker-compose-configuration.yml
+```
 
 Run:
-  docker-compose -f docker-compose-artemis.yml -f docker-compose-artemis-volumes.yml -f docker-compose-kirin.yml --x-networking up [-d]
+
+  `docker-compose -f docker-compose-artemis.yml -f docker-compose-configuration.yml -f docker-compose-kirin.yml --x-networking up [-d]`
     
+It should starts all the differents container.
+
+if you ran it without the `-d` option, you can stop all container by pressing `ctrl+c`.
+
+to remove all container:
+
+  `docker-compose -f docker-compose-artemis.yml -f docker-compose-configuration.yml -f docker-compose-kirin.yml --x-networking rm -f`
+
+### Install navitia
+
+The first time you pop all the different container, you need to install navitia from scratch.
+
+#### Get some navitia packages 
+you can build some, or get some from ci.navitia.io. Take care to get some packages build for the artemis 
+platform (debian 8).
+
+To get the latest navitia dev branch packages do:
+
+`wget --no-check-certificate https://ci.navitia.io/job/navitia_dev_multi_os/LINUX_DISTRIB=debian8/lastSuccessfulBuild/artifact/\*zip\*/archive.zip`
+
+The packages must be unziped and stored in a different directory.
+
+#### First install
+You need fabric ((https://github.com/CanalTP/fabric_navitia)) to install navitia.
+
+Go to the directory with the navitia packages and install navitia with fabric 
+
+* In the python path you need to give the path to the `navitia_image_manager/platforms` dir
+* with the -f argument give the path to the fabfile directory of fabric
+
+`PYTHONPATH=../platforms fab -f ../../fabric_navitia/fabfile  use:artemis deploy_from_scratch`
+
+#### Upgrade version
+
+Same as in the first install, but you can call the `upgrade_version` target instead of `deploy_from_scratch`:
+
+`PYTHONPATH=../platforms fab -f ../../fabric_navitia/fabfile  use:artemis upgrade_version`
+
+#### Commit the container
+To avoid doing again the whole fabric install, you can commit your navitia container (the containers must 
+be stopped):
+
+`docker commit artemis_db navitia/artemis_db`
+
+`docker commit artemis navitia/debian8_artemis`
+
+### Running the tests
 Now you can reconnect to artemis and run:
 
-    CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests
+    `docker exec -it artemis bash`
+    `CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests`
 
+### cities update
+
+For the moment you still need to run cities before artemis but it will soon change
+
+`cities -i /artemis/data/france_boundaries --connection-string 'user=navitia password=password host=artemis_db port=5432 dbname=cities'`
