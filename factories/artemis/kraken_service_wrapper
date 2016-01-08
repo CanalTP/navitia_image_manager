@@ -7,4 +7,4 @@ kraken_name=kraken_$1
 action=$2
 
 #echo /usr/bin/supervisorctl $action $kraken_name
-/usr/bin/supervisorctl $action $kraken_name
+/usr/sbin/service $kraken_name $action
