@@ -3,3 +3,4 @@ docker-py
 clingon
 semver
 nose
+docker-compose
