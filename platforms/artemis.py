@@ -62,5 +62,5 @@ def artemis():
     add_instance("freqsimple", "freqsimple")
     add_instance("freqgtfs-01", "freqgtfs-01")
     add_instance("tad", "tad")
-    add_instance("sncf", "sncf")
+    add_instance("sncf", "sncf", enable_realtime=True, rt_topics=['realtime.ire'])
 
