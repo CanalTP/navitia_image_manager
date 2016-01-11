@@ -12,6 +12,8 @@ artemis:
   hostname: "artemis"
   volumes_from: 
     - rabbitmq
+  ports:
+    - 8080:80
 
 artemis_db:
   container_name: artemis_db

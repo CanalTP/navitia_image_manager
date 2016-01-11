@@ -14,8 +14,12 @@ RUN apt-get install -y  postgresql-server-dev-all postgis
 RUN echo 'host  all  all  0.0.0.0/0  password' >> /etc/postgresql/9.4/main/pg_hba.conf
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.4/main/postgresql.conf
 
+#little tunning of postgres to speed up things
+RUN sed -i 's/#\?shared_buffers = [0-9]*MB/shared_buffers = 2048MB/' /etc/postgresql/9.4/main/postgresql.conf
+RUN sed -i 's/#\?work_mem = [0-9]*MB/work_mem = 16MB/' /etc/postgresql/9.4/main/postgresql.conf
+RUN sed -i 's/#\?checkpoint_segments = [0-9]*/checkpoint_segments = 30/' /etc/postgresql/9.4/main/postgresql.conf
+
 # we create the default db:
-# TODO, cities db should be installed by fabric !
 RUN service postgresql start && \
     /bin/su postgres -c "psql -c \"CREATE USER kirin PASSWORD 'kirin'\"" && \
     /bin/su postgres -c "createdb kirin --owner=kirin --encoding=UTF8 --template=template0" && \

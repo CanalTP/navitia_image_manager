@@ -118,8 +118,10 @@ image for kirin by running:
 
     docker build -t kirin:latest .
 
-Clone docker_kirin project (https://github.com/CanalTP/docker_kirin) and build a docker image for kirin_config:
+Clone docker_kirin project (https://github.com/CanalTP/docker_kirin) and build a docker image for 
+kirin_config (in the directory `artemis`):
 
+    
     docker build -t kirin_config:artemis . 
 
 ### Run all the containers
@@ -142,6 +144,8 @@ artemis:
   volumes:
    - /home/antoine/dev/artemis:/artemis/source
    - /home/antoine/dev/data_artemis:/artemis/data
+   - /home/antoine/dev/reference_artemis:/artemis/references
+
 '> docker_compose/artemis/docker-compose-configuration.yml
 ```
 
@@ -201,8 +205,3 @@ Now you can reconnect to artemis and run:
     `docker exec -it artemis bash`
     `CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests`
 
-### cities update
-
-For the moment you still need to run cities before artemis but it will soon change
-
-`cities -i /artemis/data/france_boundaries --connection-string 'user=navitia password=password host=artemis_db port=5432 dbname=cities'`
