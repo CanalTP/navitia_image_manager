@@ -144,6 +144,8 @@ artemis:
   volumes:
    - /home/antoine/dev/artemis:/artemis/source
    - /home/antoine/dev/data_artemis:/artemis/data
+   - /home/antoine/dev/reference_artemis:/artemis/references
+
 '> docker_compose/artemis/docker-compose-configuration.yml
 ```
 
