@@ -60,10 +60,6 @@ You will need Navitia's deployment project too (in the same virtualenv):
 
     git clone https@github.com:CanalTP/fabric_navitia.git
     cd fabric_navitia; pip install -r requirements.txt
-
-Go to navitia_image_manager/external_images/rabbitmq and build a docker image for rabbitmq:
-
-   docker build -t rabbitmq:latest .
   
 ----------
 
@@ -119,37 +115,37 @@ image for kirin by running:
     docker build -t kirin:latest .
 
 Clone docker_kirin project (https://github.com/CanalTP/docker_kirin) and build a docker image for 
-kirin_config (in the directory `artemis`):
+kirin_config (cd to the directory `/artemis`):
 
-    
     docker build -t kirin_config:artemis . 
 
 ### Run all the containers
 
 At this point, check with `docker images` that you should have following images:
     
-    rabbitmq:latest
-    navitia/artemis
-    navitia/artemis_db
-    kirin_conifg
+    navitia/debian8_artemis:latest
+    navitia/artemis_db:latest
+    kirin_config:artemis
     kirin:latest
 
 
-Cd to navitia_image_manager/docker_compose/artemis and create a docker-compose-configuration.yml with the 
-proper paths for artemis/source and artemis/data with absolute path:
+Create a docker-compose-configuration.yml with the proper paths for
+artemis/source and artemis/data with absolute path (modify with your own):
 
 ```
 echo '# own custom pathes
 artemis:
   volumes:
-   - /home/antoine/dev/artemis:/artemis/source
-   - /home/antoine/dev/data_artemis:/artemis/data
-   - /home/antoine/dev/reference_artemis:/artemis/references
+   - path/to/artemis:/artemis/source
+   - path/to/artemis_data:/artemis/data
+   - path/to/artemis_references:/artemis/references
 
 '> docker_compose/artemis/docker-compose-configuration.yml
 ```
 
-Run:
+Run (`pip install docker-compose` before if needed):
+
+  `cd docker_compose/artemis`
 
   `docker-compose -f docker-compose-artemis.yml -f docker-compose-configuration.yml -f docker-compose-kirin.yml --x-networking up [-d]`
     
@@ -157,7 +153,7 @@ It should starts all the differents container.
 
 if you ran it without the `-d` option, you can stop all container by pressing `ctrl+c`.
 
-to remove all container:
+If you have to remove all container:
 
   `docker-compose -f docker-compose-artemis.yml -f docker-compose-configuration.yml -f docker-compose-kirin.yml --x-networking rm -f`
 
@@ -202,6 +198,7 @@ be stopped):
 ### Running the tests
 Now you can reconnect to artemis and run:
 
-    `docker exec -it artemis bash`
-    `CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests`
+    docker exec -it artemis bash
+    cd artemis/source
+    CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests
 
