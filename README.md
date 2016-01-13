@@ -115,9 +115,9 @@ image for kirin by running:
     docker build -t kirin:latest .
 
 Clone docker_kirin project (https://github.com/CanalTP/docker_kirin) and build a docker image for 
-kirin_config (cd to the directory `/artemis`):
+kirin_config (cd to the directory `/artemis_docker`):
 
-    docker build -t kirin_config:artemis . 
+    docker build -t kirin_config:artemis_docker .
 
 ### Run all the containers
 
@@ -125,7 +125,7 @@ At this point, check with `docker images` that you should have following images:
     
     navitia/debian8_artemis:latest
     navitia/artemis_db:latest
-    kirin_config:artemis
+    kirin_config:artemis_docker
     kirin:latest
 
 

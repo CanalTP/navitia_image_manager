@@ -2,7 +2,7 @@
 # Artemis is neccessary for launching kirin
 kirin_config:
   container_name: kirin_config
-  image: kirin_config:artemis
+  image: kirin_config:artemis_docker
   stdin_open: true
   volumes_from: 
     - rabbitmq
