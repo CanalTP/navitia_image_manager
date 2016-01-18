@@ -43,7 +43,7 @@ def artemis():
     add_instance("freqgtfs", "freqgtfs")
     add_instance("corr-01", "corr-01")
     add_instance("passe-minuit-01", "passe-minuit-01")
-    add_instance("guichet-unique", "guichet-unique")
+    add_instance("guichet-unique", "guichet-unique", enable_realtime=True, rt_topics=['realtime.ire'])
     add_instance("freqparis", "freqparis")
     add_instance("itl", "itl")
     add_instance("poitiers", "poitiers")
@@ -62,5 +62,3 @@ def artemis():
     add_instance("freqsimple", "freqsimple")
     add_instance("freqgtfs-01", "freqgtfs-01")
     add_instance("tad", "tad")
-    add_instance("sncf", "sncf", enable_realtime=True, rt_topics=['realtime.ire'])
-
