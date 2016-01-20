@@ -4,3 +4,4 @@ clingon
 semver
 nose
 docker-compose
+requests==2.7.0
