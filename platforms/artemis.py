@@ -25,6 +25,9 @@ def artemis():
     env.postgresql_database_host = POSTGIS_HOST
 
     env.rabbitmq_host = 'rabbitmq'
+
+    env.jormungandr_additional_settings['CIRCUIT_BREAKER_MAX_FAIL'] = 10
+    env.jormungandr_additional_settings['CIRCUIT_BREAKER_TIMEOUT_S'] = 1
     
     add_instance("corr-02", "corr-02")
     add_instance("airport-01", "airport-01")
