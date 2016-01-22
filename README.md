@@ -137,8 +137,8 @@ echo '# own custom pathes
 artemis:
   volumes:
    - path/to/artemis:/artemis/source
-   - path/to/artemis_data:/artemis/data
-   - path/to/artemis_references:/artemis/references
+   - path/to/artemis_data:/artemis/data:Z
+   - path/to/artemis_references:/artemis/references:Z
 
 '> docker_compose/artemis/docker-compose-configuration.yml
 ```
@@ -161,31 +161,34 @@ If you have to remove all container:
 
 The first time you pop all the different container, you need to install navitia from scratch.
 
-#### Get some navitia packages 
-you can build some, or get some from ci.navitia.io. Take care to get some packages build for the artemis 
-platform (debian 8).
-
-To get the latest navitia dev branch packages do:
-
-`wget --no-check-certificate https://ci.navitia.io/job/navitia_dev_multi_os/LINUX_DISTRIB=debian8/lastSuccessfulBuild/artifact/\*zip\*/archive.zip`
-
-The packages must be unziped and stored in a different directory.
-
 #### First install
 You need fabric ((https://github.com/CanalTP/fabric_navitia)) to install navitia.
 
-Go to the directory with the navitia packages and install navitia with fabric 
+You will also need some debian 8 navitia packages.
+
 
 * In the python path you need to give the path to the `navitia_image_manager/platforms` dir
 * with the -f argument give the path to the fabfile directory of fabric
+* You will need to tell fabric where to find the navitia packages. You can either
+    - tell fabric to download them (from jenkins for example). Call the fabric task `packages` for this
+    
+    `packages:"https://ci.navitia.io/job/navitia_release_multi_os/LINUX_DISTRIB\=debian8/lastSuccessfulBuild/artifact/*zip*/archive.zip"`
+    
+    - tell fabric where to find them (Note: `packages` task will store the downloaded packages in 
+    /tmp/navitia_packages_{datetime}):
+    
+     `let:debian_packages_path=path_to_packages`
+     
 
-`PYTHONPATH=../platforms fab -f ../../fabric_navitia/fabfile  use:artemis deploy_from_scratch`
+`PYTHONPATH=platforms fab -f ../fabric_navitia/fabfile  use:artemis let:debian_packages_path=
+/tmp/ deploy_from_scratch`
 
 #### Upgrade version
 
 Same as in the first install, but you can call the `upgrade_version` target instead of `deploy_from_scratch`:
 
-`PYTHONPATH=../platforms fab -f ../../fabric_navitia/fabfile  use:artemis upgrade_version`
+`PYTHONPATH=../platforms fab -f ../../fabric_navitia/fabfile  use:artemis let:debian_packages_path=
+/tmp/ upgrade_version`
 
 #### Commit the container
 To avoid doing again the whole fabric install, you can commit your navitia container (the containers must 
