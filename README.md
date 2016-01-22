@@ -137,8 +137,8 @@ echo '# own custom pathes
 artemis:
   volumes:
    - path/to/artemis:/artemis/source
-   - path/to/artemis_data:/artemis/data
-   - path/to/artemis_references:/artemis/references
+   - path/to/artemis_data:/artemis/data:Z
+   - path/to/artemis_references:/artemis/references:Z
 
 '> docker_compose/artemis/docker-compose-configuration.yml
 ```
