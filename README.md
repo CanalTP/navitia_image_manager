@@ -128,7 +128,6 @@ At this point, check with `docker images` that you should have following images:
     kirin_config:artemis_docker
     kirin:latest
 
-
 Create a docker-compose-configuration.yml with the proper paths for
 artemis/source and artemis/data with absolute path (modify with your own):
 
@@ -170,9 +169,9 @@ You will also need some debian 8 navitia packages.
 * In the python path you need to give the path to the `navitia_image_manager/platforms` dir
 * with the -f argument give the path to the fabfile directory of fabric
 * You will need to tell fabric where to find the navitia packages. You can either
-    - tell fabric to download them (from jenkins for example). Call the fabric task `packages` for this
+    - tell fabric to download them (from jenkins for example). Call the fabric task `get_packages` for this
     
-    `packages:"https://ci.navitia.io/job/navitia_release_multi_os/LINUX_DISTRIB\=debian8/lastSuccessfulBuild/artifact/*zip*/archive.zip"`
+    `get_packages:"https://ci.navitia.io/job/navitia_release_multi_os/LINUX_DISTRIB\=debian8/lastSuccessfulBuild/artifact/*zip*/archive.zip"`
     
     - tell fabric where to find them (Note: `packages` task will store the downloaded packages in 
     /tmp/navitia_packages_{datetime}):
@@ -180,8 +179,7 @@ You will also need some debian 8 navitia packages.
      `let:debian_packages_path=path_to_packages`
      
 
-`PYTHONPATH=platforms fab -f ../fabric_navitia/fabfile  use:artemis let:debian_packages_path=
-/tmp/ deploy_from_scratch`
+`PYTHONPATH=platforms fab -f ../fabric_navitia/fabfile  use:artemis let:debian_packages_path=/tmp/ deploy_from_scratch`
 
 #### Upgrade version
 
