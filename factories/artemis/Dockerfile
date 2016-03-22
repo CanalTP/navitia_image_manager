@@ -19,3 +19,10 @@ COPY unsecure_key.pub /root/.ssh/authorized_keys
 RUN chmod 644 /root/.ssh/authorized_keys
 
 RUN apt install -y vim
+
+# for artemis we'll need a virtualenv to install the requirements
+RUN apt-get install -y python-dev
+RUN pip install virtualenvwrapper
+RUN /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh && mkvirtualenv artemis"
+COPY launch_artemis.sh /launch_artemis.sh
+RUN chmod a+x /launch_artemis.sh
