@@ -202,6 +202,16 @@ be stopped):
 Now you can reconnect to artemis and run:
 
     docker exec -it artemis bash
-    cd artemis/source
-    CONFIG_FILE=/artemis/source/artemis/default_settings_docker.py python -m py.test artemis/tests
-
+    ./launch_artemis.sh
+    
+Note: you can pass parameters to artemis (the script parameters are forwarded to py.test).
+ 
+ You can thus for example:
+ 
+  * run only a test (by giving the path to the test file)
+  
+  * skip the loading of cities (--skip_cities)
+  
+  * skip the data loading (--skip_bina)
+  
+  * get more logs (-s)
