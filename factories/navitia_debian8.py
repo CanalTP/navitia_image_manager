@@ -29,6 +29,7 @@ def factory(source='debian8'):
     df = DIM.DockerFile(
         os.path.join('factories', source, 'Dockerfile'),
         os.path.join('factories', source, 'supervisord.conf'),
+        os.path.join('factories', source, 'rabbitmq.config'),
         'ssh/unsecure_key.pub',
         add_ons=('apache', 'user', 'french', 'postgres', 'sshserver', 'rabbitmq', 'redis', 'supervisor'),
         template_context=dict(user='navitia', password='navitia', home_ssh='/home/navitia/.ssh')

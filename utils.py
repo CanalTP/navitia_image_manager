@@ -78,10 +78,16 @@ def chain_temp_files(files, context):
             shutil.rmtree(temp, ignore_errors=True)
 
 
-def render(string, context, use_jinja=False):
+def render(string, context, use_jinja=False, should_raise=False):
     if isinstance(string, unicode):
         string = string.encode('utf-8')
-    return Template(string).render(**context) if use_jinja else string.format(**context)
+    try:
+        return Template(string).render(**context) if use_jinja else string.format(**context)
+    except KeyError:
+        if should_raise:
+            raise
+        else:
+            return string
 
 
 def wait(iterable):
