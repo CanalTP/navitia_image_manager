@@ -16,7 +16,7 @@ def get_docker_ip(docker_name):
                                          docker_name]))
 
 
-def artemis():
+def artemis(_):
     host = 'root@' + get_docker_ip('artemis')
     db = 'root@' + get_docker_ip(POSTGIS_HOST)
 
