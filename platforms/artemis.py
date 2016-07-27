@@ -12,7 +12,7 @@ POSTGIS_HOST = 'artemis_db'
 
 def get_docker_ip(docker_name):
     return eval(subprocess.check_output(["docker", "inspect", "--format",
-                                         "'{{ .NetworkSettings.Networks.artemis.IPAddress }}'",
+                                         "'{{ .NetworkSettings.IPAddress }}'",
                                          docker_name]))
 
 
