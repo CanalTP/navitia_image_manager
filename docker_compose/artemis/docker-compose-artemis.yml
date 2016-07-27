@@ -1,10 +1,8 @@
-# Read README.md before launching
-
-# http://stackoverflow.com/questions/27670828/fig-up-docker-containers-start-synchronisation
 rabbitmq:
   container_name: rabbitmq
   image: rabbitmq:latest
   hostname: "rabbitmq"
+  net: artemis
 
 artemis:
   container_name: artemis
@@ -14,10 +12,11 @@ artemis:
     - rabbitmq
   ports:
     - 8080:80
+  net: artemis
 
 artemis_db:
   container_name: artemis_db
   image: navitia/artemis_db:latest
   stdin_open: true
   hostname: "artemis_db"
-
+  net: artemis
