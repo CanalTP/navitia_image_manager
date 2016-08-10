@@ -67,7 +67,7 @@ def factory(navitia_packages='',
     try:
         dim.build()
         dcm = dim.create_container(CONTAINER_NAME, start=True, if_exist='remove')
-        ffd = FFD.FabricForDocker(dcm, user='navitia', platform='simple', distrib='debian8')
+        ffd = FFD.FabricForDocker(dcm, user='root', platform='simple', distrib='debian8')
         time.sleep(5)
         with utils.chdir(navitia_packages):
             ffd.execute('deploy_from_scratch')

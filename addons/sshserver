@@ -2,9 +2,15 @@
 RUN apt-get install -y openssh-server
 # configure SSH server
 RUN mkdir /var/run/sshd
-# for example: /home/navitia/.ssh
-RUN mkdir -p {home_ssh}
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+# set for root
+RUN mkdir -p /root/.ssh
+COPY {unsecure_key_pub} /root/.ssh/authorized_keys
+RUN chmod 644 /root/.ssh/authorized_keys
+# set for user
+# for example: /home/navitia/.ssh
+RUN mkdir -p {home_ssh}
 COPY {unsecure_key_pub} {home_ssh}/authorized_keys
+RUN chown -R {user}:{user} {home_ssh}
 RUN chmod 644 {home_ssh}/authorized_keys
