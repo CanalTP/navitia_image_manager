@@ -6,7 +6,7 @@ kirin_config:
   stdin_open: true
   volumes_from: 
     - rabbitmq
-   
+
 kirin:
   container_name: kirin
   ports:
@@ -14,9 +14,10 @@ kirin:
   image: kirin:latest
   hostname: "kirin"
   restart: always
-  volumes_from: 
+  volumes_from:
     - kirin_config
     - artemis_db
+  net: artemis
   # Note: we need artemis_db to be ready to migrate the database schema, so we wait
   command: bash -c "while ! pg_isready --host=artemis_db; do sleep 1; done  && python ./manage.py db upgrade; gunicorn -b 0.0.0.0:9090 --access-logfile - kirin:app"
 
@@ -25,6 +26,7 @@ kirin_background:
   image: kirin:latest
   restart: always
   hostname: "kirin_background"
-  volumes_from: 
+  volumes_from:
     - kirin_config
+  net: artemis
   command: bash -c "while ! pg_isready --host=artemis_db; do sleep 1; done  &&  python ./manage.py load_realtime"

@@ -12,7 +12,7 @@ POSTGIS_HOST = 'artemis_db'
 
 def get_docker_ip(docker_name):
     return eval(subprocess.check_output(["docker", "inspect", "--format",
-                                         "'{{ .NetworkSettings.IPAddress }}'",
+                                         "'{{ .NetworkSettings.Networks.artemis.IPAddress }}'",
                                          docker_name]))
 
 
@@ -28,7 +28,7 @@ def artemis(_=None):
 
     env.jormungandr_additional_settings['CIRCUIT_BREAKER_MAX_FAIL'] = 10
     env.jormungandr_additional_settings['CIRCUIT_BREAKER_TIMEOUT_S'] = 1
-    
+
     add_instance("corr-02", "corr-02")
     add_instance("airport-01", "airport-01")
     add_instance("prolong-mano", "prolong-mano")
@@ -66,3 +66,4 @@ def artemis(_=None):
     add_instance("freqgtfs-01", "freqgtfs-01")
     add_instance("tad", "tad")
     add_instance("fr-auv", "fr-auv")
+
