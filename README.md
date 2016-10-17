@@ -146,15 +146,15 @@ Run (`pip install docker-compose` before if needed):
 
   `cd docker_compose/artemis`
 
-  `docker-compose -f docker-compose-artemis.yml -f docker-compose-configuration.yml -f docker-compose-kirin.yml --x-networking up [-d]`
-    
+  `docker-compose -f docker-compose-artemis.yml -f docker-compose-configuration.yml -f docker-compose-kirin.yml up [-d]`
+
 It should starts all the differents container.
 
 if you ran it without the `-d` option, you can stop all container by pressing `ctrl+c`.
 
 If you have to remove all container:
 
-  `docker-compose -f docker-compose-artemis.yml -f docker-compose-configuration.yml -f docker-compose-kirin.yml --x-networking rm -f`
+  `docker-compose -f docker-compose-artemis.yml -f docker-compose-configuration.yml -f docker-compose-kirin.yml rm -f`
 
 ### Install navitia
 
@@ -170,14 +170,14 @@ You will also need some debian 8 navitia packages.
 * with the -f argument give the path to the fabfile directory of fabric
 * You will need to tell fabric where to find the navitia packages. You can either
     - tell fabric to download them (from jenkins for example). Call the fabric task `get_packages` for this
-    
-    `get_packages:"https://ci.navitia.io/job/navitia_release_multi_os/LINUX_DISTRIB\=debian8/lastSuccessfulBuild/artifact/*zip*/archive.zip"`
-    
+
+    `get_packages:"https://ci.navitia.io/view/navitia/job/navitia_dev/lastSuccessfulBuild/artifact/*zip*/archive.zip"`
+
     - tell fabric where to find them (Note: `packages` task will store the downloaded packages in 
     /tmp/navitia_packages_{datetime}):
-    
+
      `let:debian_packages_path=path_to_packages`
-     
+
 
 `PYTHONPATH=platforms fab -f ../fabric_navitia/fabfile  use:artemis let:debian_packages_path=/tmp/ deploy_from_scratch`
 
