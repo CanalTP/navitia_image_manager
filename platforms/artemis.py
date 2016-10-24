@@ -29,7 +29,7 @@ def artemis(_=None):
     env.jormungandr_additional_settings['CIRCUIT_BREAKER_MAX_FAIL'] = 10
     env.jormungandr_additional_settings['CIRCUIT_BREAKER_TIMEOUT_S'] = 1
 
-    # Use 1 milliseconde for clean cache on jormungandr Artemis
+    # Use 0.1 seconds for clean cache on jormungandr Artemis
     env.jormungandr_cache_timeout = 0.1
 
     add_instance("corr-02", "corr-02")
