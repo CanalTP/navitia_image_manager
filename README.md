@@ -142,10 +142,13 @@ artemis:
 '> docker_compose/artemis/docker-compose-configuration.yml
 ```
 
-Run (`pip install docker-compose` before if needed):
+Run (`pip install docker-compose` before if needed, make sure the version >=1.8.1):
 
   `cd docker_compose/artemis`
-
+   
+check if the network `artemis` exist with `docker network ls`, if it doesn't, create it:   
+  `docker network create artemis`  
+   
   `docker-compose -f docker-compose-artemis.yml -f docker-compose-configuration.yml -f docker-compose-kirin.yml up [-d]`
 
 It should starts all the differents container.
