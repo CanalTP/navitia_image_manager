@@ -213,7 +213,7 @@ class DockerImageManager(object):
         else:
             self.log.info("Building image {}".format(self.image_name))
             with self.source.get_docker_context() as context:
-                wait(docker_client.build(path=context, tag=self.image_name, rm=True))
+                wait(docker_client.build(path=context, tag=self.image_name, rm=True, nocache=True))
         return self
 
     def create_image(self):
