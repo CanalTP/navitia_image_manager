@@ -1,4 +1,6 @@
-
+# This project is deprecated
+You should use use https://github.com/CanalTP/navitia-docker-compose
+Local execution of Artemis still use this project.. WIP...
 
 # Docker Image Manager
 
