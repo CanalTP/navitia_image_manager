@@ -1,4 +1,4 @@
-FROM navitia/debian8:latest
+FROM navitia/debian8_dev:latest
 
 RUN pip install pytest
 
@@ -8,7 +8,11 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY kraken_service_wrapper /usr/local/bin/kraken_service_wrapper
 RUN chmod a+x /usr/local/bin/kraken_service_wrapper
 
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get remove -y openssh-client
+RUN apt-get -y autoclean 
 RUN apt-get install -y openssh-server
+
 # configure SSH server
 RUN mkdir -p /var/run/sshd
 
@@ -21,9 +25,9 @@ RUN chmod 644 /root/.ssh/authorized_keys
 RUN apt install -y vim
 
 # for artemis we'll need a virtualenv to install the requirements
-RUN apt-get update
 RUN apt-get install -y python-dev
 RUN pip install virtualenvwrapper
 RUN /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh && mkvirtualenv artemis"
 COPY launch_artemis.sh /launch_artemis.sh
-RUN chmod a+x /launch_artemis.sh
+# Artemis can't be launched immediately
+# RUN chmod a+x /launch_artemis.sh

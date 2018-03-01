@@ -13,6 +13,9 @@ artemis:
   ports:
     - 8080:80
   net: artemis
+  # Loop so artemis container stays running
+  command: sh -c "while true; do sleep 1; done "
+
 
 artemis_db:
   container_name: artemis_db
